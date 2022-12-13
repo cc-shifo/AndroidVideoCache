@@ -15,6 +15,8 @@ import static com.danikula.videocache.Preconditions.checkNotNull;
  * Useful for streaming something with caching e.g. streaming video/audio etc.
  *
  * @author Alexey Danilov (danikula@gmail.com).
+ *
+ * remote端业务逻辑实现类，及使用Fetcher获取到数据，将数据转交给缓存架构内部其他对象（写入缓存，通知Socket Client）
  */
 class ProxyCache {
 

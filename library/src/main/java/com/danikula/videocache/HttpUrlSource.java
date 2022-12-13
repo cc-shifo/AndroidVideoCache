@@ -30,6 +30,8 @@ import static java.net.HttpURLConnection.HTTP_SEE_OTHER;
  * {@link Source} that uses http resource as source for {@link ProxyCache}.
  *
  * @author Alexey Danilov (danikula@gmail.com).
+ *
+ * remote端的实现类。及实际数据的Fetcher。
  */
 public class HttpUrlSource implements Source {
 
