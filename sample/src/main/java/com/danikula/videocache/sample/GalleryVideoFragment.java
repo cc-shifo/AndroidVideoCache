@@ -7,7 +7,7 @@ import android.widget.ProgressBar;
 import android.widget.VideoView;
 
 import com.danikula.videocache.CacheListener;
-import com.danikula.videocache.HttpProxyCacheServer;
+import com.danikula.videocache.HttpProxyServer;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EFragment;
@@ -55,7 +55,7 @@ public class GalleryVideoFragment extends Fragment implements CacheListener {
     }
 
     private void startProxy() {
-        HttpProxyCacheServer proxy = App.getProxy(getActivity());
+        HttpProxyServer proxy = App.getProxy(getActivity());
         proxy.registerCacheListener(this, url);
         videoView.setVideoPath(proxy.getProxyUrl(url));
     }

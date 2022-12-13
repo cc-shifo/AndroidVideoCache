@@ -25,7 +25,7 @@ import static com.danikula.videocache.Preconditions.checkNotNull;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
 /**
- * Pings {@link HttpProxyCacheServer} to make sure it works.
+ * Pings {@link HttpProxyServer} to make sure it works.
  *
  * @author Alexey Danilov (danikula@gmail.com).
  */

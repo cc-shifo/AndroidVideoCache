@@ -16,11 +16,11 @@ import java.util.concurrent.atomic.AtomicInteger;
 import static com.danikula.videocache.Preconditions.checkNotNull;
 
 /**
- * Client for {@link HttpProxyCacheServer}
+ * Client for {@link HttpProxyServer}
  *
  * @author Alexey Danilov (danikula@gmail.com).
  */
-final class HttpProxyCacheServerClients {
+final class HttpProxyClient {
 
     private final AtomicInteger clientsCount = new AtomicInteger(0);
     private final String url;
@@ -29,7 +29,7 @@ final class HttpProxyCacheServerClients {
     private final CacheListener uiCacheListener;
     private final Config config;
 
-    public HttpProxyCacheServerClients(String url, Config config) {
+    public HttpProxyClient(String url, Config config) {
         this.url = checkNotNull(url);
         this.config = checkNotNull(config);
         this.uiCacheListener = new UiListenerHandler(url, listeners);

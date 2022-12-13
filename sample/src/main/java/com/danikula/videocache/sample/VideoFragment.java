@@ -9,7 +9,7 @@ import android.widget.ProgressBar;
 import android.widget.VideoView;
 
 import com.danikula.videocache.CacheListener;
-import com.danikula.videocache.HttpProxyCacheServer;
+import com.danikula.videocache.HttpProxyServer;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EFragment;
@@ -45,7 +45,7 @@ public class VideoFragment extends Fragment implements CacheListener {
     }
 
     private void checkCachedState() {
-        HttpProxyCacheServer proxy = App.getProxy(getActivity());
+        HttpProxyServer proxy = App.getProxy(getActivity());
         boolean fullyCached = proxy.isCached(url);
         setCachedState(fullyCached);
         if (fullyCached) {
@@ -54,7 +54,7 @@ public class VideoFragment extends Fragment implements CacheListener {
     }
 
     private void startVideo() {
-        HttpProxyCacheServer proxy = App.getProxy(getActivity());
+        HttpProxyServer proxy = App.getProxy(getActivity());
         proxy.registerCacheListener(this, url);
         String proxyUrl = proxy.getProxyUrl(url);
         Log.d(LOG_TAG, "Use proxy url " + proxyUrl + " instead of original url " + url);

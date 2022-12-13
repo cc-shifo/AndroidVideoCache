@@ -29,7 +29,7 @@ public class PingerTest extends BaseTest {
 
     @Test
     public void testPingSuccess() throws Exception {
-        HttpProxyCacheServer server = new HttpProxyCacheServer(RuntimeEnvironment.application);
+        HttpProxyServer server = new HttpProxyServer(RuntimeEnvironment.application);
         Pinger pinger = new Pinger("127.0.0.1", getPort(server));
         boolean pinged = pinger.ping(1, 100);
         assertThat(pinged).isTrue();
@@ -65,14 +65,14 @@ public class PingerTest extends BaseTest {
     public void testPingedWithExternalProxy() throws Exception {
         installExternalSystemProxy();
 
-        HttpProxyCacheServer server = new HttpProxyCacheServer(RuntimeEnvironment.application);
+        HttpProxyServer server = new HttpProxyServer(RuntimeEnvironment.application);
         Pinger pinger = new Pinger("127.0.0.1", getPortWithoutPing(server));
         assertThat(pinger.ping(1, 100)).isTrue();
     }
 
     @Test // https://github.com/danikula/AndroidVideoCache/issues/28
     public void testIsNotPingedWithoutCustomProxySelector() throws Exception {
-        HttpProxyCacheServer server = new HttpProxyCacheServer(RuntimeEnvironment.application);
+        HttpProxyServer server = new HttpProxyServer(RuntimeEnvironment.application);
         // IgnoreHostProxySelector is set in HttpProxyCacheServer constructor. So let reset it by custom.
         installExternalSystemProxy();
 

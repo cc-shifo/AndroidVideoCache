@@ -51,25 +51,25 @@ import static com.danikula.videocache.Preconditions.checkNotNull;
  *
  * @author Alexey Danilov (danikula@gmail.com).
  */
-public class HttpProxyCacheServer {
+public class HttpProxyServer {
 
     private static final Logger LOG = LoggerFactory.getLogger("HttpProxyCacheServer");
     private static final String PROXY_HOST = "127.0.0.1";
 
     private final Object clientsLock = new Object();
     private final ExecutorService socketProcessor = Executors.newFixedThreadPool(8);
-    private final Map<String, HttpProxyCacheServerClients> clientsMap = new ConcurrentHashMap<>();
+    private final Map<String, HttpProxyClient> clientsMap = new ConcurrentHashMap<>();
     private final ServerSocket serverSocket;
     private final int port;
     private final Thread waitConnectionThread;
     private final Config config;
     private final Pinger pinger;
 
-    public HttpProxyCacheServer(Context context) {
+    public HttpProxyServer(Context context) {
         this(new Builder(context).buildConfig());
     }
 
-    private HttpProxyCacheServer(Config config) {
+    private HttpProxyServer(Config config) {
         this.config = checkNotNull(config);
         try {
             InetAddress inetAddress = InetAddress.getByName(PROXY_HOST);
@@ -147,7 +147,7 @@ public class HttpProxyCacheServer {
     public void unregisterCacheListener(CacheListener cacheListener) {
         checkNotNull(cacheListener);
         synchronized (clientsLock) {
-            for (HttpProxyCacheServerClients clients : clientsMap.values()) {
+            for (HttpProxyClient clients : clientsMap.values()) {
                 clients.unregisterCacheListener(cacheListener);
             }
         }
@@ -205,7 +205,7 @@ public class HttpProxyCacheServer {
 
     private void shutdownClients() {
         synchronized (clientsLock) {
-            for (HttpProxyCacheServerClients clients : clientsMap.values()) {
+            for (HttpProxyClient clients : clientsMap.values()) {
                 clients.shutdown();
             }
             clientsMap.clear();
@@ -232,7 +232,7 @@ public class HttpProxyCacheServer {
             if (pinger.isPingRequest(url)) {
                 pinger.responseToPing(socket);
             } else {
-                HttpProxyCacheServerClients clients = getClients(url);
+                HttpProxyClient clients = getClients(url);
                 clients.processRequest(request, socket);
             }
         } catch (SocketException e) {
@@ -247,11 +247,11 @@ public class HttpProxyCacheServer {
         }
     }
 
-    private HttpProxyCacheServerClients getClients(String url) throws ProxyCacheException {
+    private HttpProxyClient getClients(String url) throws ProxyCacheException {
         synchronized (clientsLock) {
-            HttpProxyCacheServerClients clients = clientsMap.get(url);
+            HttpProxyClient clients = clientsMap.get(url);
             if (clients == null) {
-                clients = new HttpProxyCacheServerClients(url, config);
+                clients = new HttpProxyClient(url, config);
                 clientsMap.put(url, clients);
             }
             return clients;
@@ -261,7 +261,7 @@ public class HttpProxyCacheServer {
     private int getClientsCount() {
         synchronized (clientsLock) {
             int count = 0;
-            for (HttpProxyCacheServerClients clients : clientsMap.values()) {
+            for (HttpProxyClient clients : clientsMap.values()) {
                 count += clients.getClientsCount();
             }
             return count;
@@ -342,7 +342,7 @@ public class HttpProxyCacheServer {
     }
 
     /**
-     * Builder for {@link HttpProxyCacheServer}.
+     * Builder for {@link HttpProxyServer}.
      */
     public static final class Builder {
 
@@ -442,13 +442,13 @@ public class HttpProxyCacheServer {
         }
 
         /**
-         * Builds new instance of {@link HttpProxyCacheServer}.
+         * Builds new instance of {@link HttpProxyServer}.
          *
          * @return proxy cache. Only single instance should be used across whole app.
          */
-        public HttpProxyCacheServer build() {
+        public HttpProxyServer build() {
             Config config = buildConfig();
-            return new HttpProxyCacheServer(config);
+            return new HttpProxyServer(config);
         }
 
         private Config buildConfig() {
