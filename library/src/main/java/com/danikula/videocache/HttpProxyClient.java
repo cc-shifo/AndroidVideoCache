@@ -19,6 +19,8 @@ import static com.danikula.videocache.Preconditions.checkNotNull;
  * Client for {@link HttpProxyServer}
  *
  * @author Alexey Danilov (danikula@gmail.com).
+ *
+ * 本地socket client的的Present
  */
 final class HttpProxyClient {
 

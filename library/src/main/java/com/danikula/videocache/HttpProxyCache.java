@@ -16,6 +16,14 @@ import static com.danikula.videocache.ProxyCacheUtils.DEFAULT_BUFFER_SIZE;
  * {@link ProxyCache} that read http url and writes data to {@link Socket}
  *
  * @author Alexey Danilov (danikula@gmail.com).
+ *
+ * 实际业务是从本地Cache文件读取数据，写入本地Socket（即数据线消费者，Video播放器）
+ *
+ * 远端地址传给HttpProxyServer，HttpProxyServer初始化本地服务器端，生成本地端口。
+ * 通过HttpProxyServer获取到本地的地址，将本地地址传给Video，Video内部创建
+ * HttpProxyClient--> HttpProxyCache,ProxyCache-->HttpUrlSource获取到数据
+ *
+ * 获取到数据-->ProxyCache写入本地文件并传给本地socket client
  */
 class HttpProxyCache extends ProxyCache {
 

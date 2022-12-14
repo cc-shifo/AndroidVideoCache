@@ -50,6 +50,8 @@ import static com.danikula.videocache.Preconditions.checkNotNull;
  * </code></pre>
  *
  * @author Alexey Danilov (danikula@gmail.com).
+ *
+ * 本地socket的服务器端。
  */
 public class HttpProxyServer {
 

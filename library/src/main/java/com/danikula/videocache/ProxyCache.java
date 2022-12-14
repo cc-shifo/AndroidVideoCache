@@ -1,11 +1,11 @@
 package com.danikula.videocache;
 
+import static com.danikula.videocache.Preconditions.checkNotNull;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.atomic.AtomicInteger;
-
-import static com.danikula.videocache.Preconditions.checkNotNull;
 
 /**
  * Proxy for {@link Source} with caching support ({@link Cache}).
@@ -15,8 +15,9 @@ import static com.danikula.videocache.Preconditions.checkNotNull;
  * Useful for streaming something with caching e.g. streaming video/audio etc.
  *
  * @author Alexey Danilov (danikula@gmail.com).
- *
- * remote端业务逻辑实现类，及使用Fetcher获取到数据，将数据转交给缓存架构内部其他对象（写入缓存，通知Socket Client）
+ * <p>
+ * remote端业务逻辑实现类，及使用HttpUrlSource（可理解成Fetcher）获取到数据，将数据转交给缓存架构内部其他对象（
+ * 写入缓存，通知Socket Client）
  */
 class ProxyCache {
 
@@ -78,9 +79,11 @@ class ProxyCache {
     }
 
     private synchronized void readSourceAsync() throws ProxyCacheException {
-        boolean readingInProgress = sourceReaderThread != null && sourceReaderThread.getState() != Thread.State.TERMINATED;
+        boolean readingInProgress = sourceReaderThread != null &&
+                sourceReaderThread.getState() != Thread.State.TERMINATED;
         if (!stopped && !cache.isCompleted() && !readingInProgress) {
-            sourceReaderThread = new Thread(new SourceReaderRunnable(), "Source reader for " + source);
+            sourceReaderThread =
+                    new Thread(new SourceReaderRunnable(), "Source reader for " + source);
             sourceReaderThread.start();
         }
     }
